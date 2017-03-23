@@ -1,0 +1,165 @@
+\chapter{Solar System Radar with the GBT}\label{chap:radar}
+
+\vspace{-1cm}
+
+\section{Introduction}
+The \gls{GBT} participates in radar observations of near-Earth asteroids and
+comets, as well as Lunar and planetary mapping and rotation studies.  These
+are done in collaboration with the Arecibo Observatory which can transmit at
+2380~MHz (\gls{Sband}) or 430~MHz (\gls{Pband}), and with JPL/Goldstone at
+8560~MHz (\gls{Xband}) or 7190~MHz (\gls{Cband}).
+
+Anyone wishing to do radar studies should collaborate with Scientists at either
+Arecibo or NASA/JPL to plan the experiment.  Proposals should be submitted to
+NRAO-Green Bank as well as to Arecibo or JPL.  Opportunities for radar
+observations can arise on short notice, in which case proposers can make use of
+\dq{DTT} (director's discretionary time) proposals if the normal proposal
+process is not timely enough.  Use the \gls{NRAO} proposal tool to submit all
+proposals, and indicate the proposal is for \dq{DTT}; these proposals will be
+reviewed immediately without waiting for the usual review process. 
+
+\vspace{-0.5cm}
+\section{Data Acquisition Backends}
+
+\begin{table}[!b]
+\begin{center}
+\caption[Radar data acquisition backends]
+{Radar data acquisition backends.
+\label{table:radarbackends}}
+\begin{tabular}{ccc}
+\toprule
+Backend & Sample rates & Bandwidths \\
+\midrule
+PFS & 5,10 MHz & 0.5--10.7 MHz \\
+JPL & 6.25--160 MHz & 1.3--60 MHz \\
+VEGAS & undefined as yet  & up to 1 Ghz \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{table}
+
+There are two data acquision backends:
+\vspace{-0.25cm}
+\begin{enumerate}[label=\bfseries{\arabic*.},leftmargin=*,
+labelindent=\parindent, itemsep=0pt]
+\item The \gls{PFS} does either 2 or 4-bit sampling. Installed in 2001. Consult
+Jean-Luc Margot or Bruce Campbell if you want to use it.
+\item JPL system, installed in 2014, does 8-bit sampling.
+\end{enumerate}
+There is a possibility of a third option, using the \gls{VEGAS} spectrometer.
+This is being developed and may be available at a later time. At present, the
+best choice is the JPL system which can be configured flexibly under computer
+control for a wide choice of bandwidths and sampling rates. The old \gls{PFS}
+is configured by hand by changing cables and filters to its inputs. Sample
+rates and bandwidths are listed in table~\ref{table:radarbackends} and
+descriptions on the usage of both backends can be found in the following wiki pages:
+
+\begin{description}[itemsep=0pt]
+\item[PFS system:] \htmladdnormallink
+{https://safe.nrao.edu/wiki/bin/view/GB/Observing/RadarObserverAdvice}
+{https://safe.nrao.edu/wiki/bin/view/GB/Observing/RadarObserverAdvice}
+\item[JPL system:] \htmladdnormallink
+{https://safe.nrao.edu/wiki/bin/view/GB/Observing/JPLRadar}
+{https://safe.nrao.edu/wiki/bin/view/GB/Observing/JPLRadar}
+\end{description}
+
+
+\newpage
+
+
+\section{GBT Scheduling Blocks}
+The two backends, \gls{PFS} and JPL, are connected in parallel, so the
+following configuration works for either one.  It should be noted that
+the data recording is not controlled through the \gls{GBT} user interface
+(\gls{Astrid} ).  The \gls{SB} tracks the object, but the user has
+to run the data acquisition process independently.
+
+\noindent Here is an example script for 8560 MHz observations.
+
+\lstinputlisting[language=PythonAstrid,
+backgroundcolor=\color{sbBackground},
+caption={[Example SB for radar observations]
+Example SB for radar observations.},
+label={lst:radar}]
+{radar_sb.py}
+
+The ephemeris file referred to in the
+{\bfseries{\textcolor{pythonKeywords}{Catalog}}()}
+command, above, gives the coordinates for the object, as described in the
+next section. The object name, in this case \dq{1999JV6} is defined in the
+file referred to in the {\bfseries{\textcolor{pythonKeywords}{Catalog}}}
+command.  One may omit the {\bfseries{\textcolor{pythonKeywords}{Focus}}}
+part of the {\bfseries{\textcolor{pythonKeywords}{AutoPeakFocus}}} command
+when observing at the lower frequencies, i.e, 2380~MHz or 430~MHz.
+
+Refer to Chapter~\ref{chap:scripts} for more information on \gls{GBT}
+configurations and \glspl{SB}.
+
+\newpage
+
+\section{Tracking moving objects}
+Here is an example of an ephemeris file for an asteroid. Refer to
+\S~\ref{sec:ephemeris} for description of the \dq{Ephemeris format}.
+
+\lstinputlisting[language=PythonAstrid,
+backgroundcolor=\color{catalogBackground},
+caption={[Example ephemeris file for an asteroid]
+Example ephemeris file for an asteroid.},
+label={lst:asteroidephem}]
+{asteroidephemexample.astrid}
+
+\noindent Consult \S~\ref{sec:comets} for a description of obtaining
+ephemeris data from the NASA/JPL \dq{Horizons} website and converting
+it for use with \gls{Astrid}.  Here is a brief description of the process:
+
+\begin{itemize}[itemsep=1pt]
+\item Access the JPL Horizons web interface: \htmladdnormallink
+{http://ssd.jpl.nasa.gov/horizons.cgi}
+{http://ssd.jpl.nasa.gov/horizons.cgi}
+\item Set up Horizons web-interface as follows:
+\begin{description}[itemsep=1pt]
+\item[ephemeris type:] OBSERVER
+\item[target body:] [select the object]  
+\item[Observer Location:] Green Bank (GBT) [select from list of observatories]
+\item[Time Span:] [put in desired values]
+\item[Table Settings:] QUANTITIES=1,3,20\newline
+(1) Astrometric RA\&Dec, (3)rates in RA\&Dec, and (20) Range and range rate
+\item[Display/Output:] plain text
+\end{description}
+\item Click \dq{Generate Ephemeris}
+\item Use the web browser file menu to save the output file as
+(for example) {\tt cometfilename.txt}
+\item Run the program {\tt jpl2astrid cometfilename.txt}\\
+A new file with an {\tt.astrid} extension will be created. An example
+of such a file is shown in Script~\ref{lst:asteroidephem}.
+\end{itemize}
+
+The resulting {\tt.astrid} file is used as an argument to the \gls{Astrid}
+{\bfseries{\textcolor{pythonKeywords}{Catalog}}()} command.
+
+\newpage
+
+\noindent If you wish to track the velocity, use:
+\begin{itemize}
+ \item {\tt jpl2astrid cometfilename.txt vel}
+ \end{itemize}
+This will put the velocity in the {\tt.astrid} file.  This option is usually
+not necessary because the relative velocity of the object is compensated by
+the transmitter, i.e., the transmitted frequency at Arecibo or Goldstone is
+programmed to result in a constant frequency received at Green Bank.
+
+\noindent {\bf Note:} the coordinate rates, columns 5 and 6 in the above
+example, as given by the Horizons listing, are:
+\begin{itemize}
+\item $dRA*cosD$
+\item $d(DEC)/dt$
+\end{itemize}
+In converting to the {\tt.astrid} result, {\tt jpl2astrid} divides the RA rate by
+cosine(Declination) so that it is the rate in the RA, rather than in
+$RA*cos(Dec)$.  The units in both coordinates are arcseconds per hour.
+
+The {\tt jpl2astrid} program often does not fill in the object's name correctly.
+One should edit the NAME in the {\tt .astrid} file to be something meaningful,
+and one should make sure the object name in the \gls{SB} matches that in
+the ephemeris table.
+

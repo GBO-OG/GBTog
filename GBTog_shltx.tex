@@ -1,0 +1,423 @@
+% to create the package use the following commands
+% pdflatex GBTog ; makeglos.pl GBTog; makeindex GBTog.idx; pdflatex GBTog;  pdflatex GBTog
+% rm -fr GBTog/*
+% latex2html -no_math -html_version 4.0,math,frame -local_icons -white -show_section_numbers -split 5 GBTog
+% put documents in /home/www.gb.nrao.edu/content/gbtprops/obsman/
+
+\documentclass{book}
+
+% packages that will be needed
+\usepackage{graphicx}
+\usepackage{html}
+%\usepackage{ldump}
+%\usepackage{frames}
+\usepackage[dvips]{color}
+\usepackage{lscape}
+\usepackage{ifthen}
+\usepackage{listings}
+\usepackage{makeidx}
+\usepackage{glossaries}
+\usepackage{robustindex}
+\usepackage{rotating}
+\usepackage{SIunits}
+\usepackage{enumitem}
+\usepackage{subfig}
+\usepackage{wrapfig}
+\usepackage{textcomp}
+\usepackage{setspace}
+\usepackage{courier}
+\usepackage{chngcntr}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{hhline}
+\usepackage{dcolumn}
+\usepackage{caption}
+\usepackage{amsmath}
+\usepackage{color}
+\usepackage{hyperref}
+\usepackage{sectsty}
+\usepackage{tikz}
+\usepackage{calc}
+\usepackage{floatrow}
+\usepackage{float}
+\usepackage{afterpage}
+
+\graphicspath{ {images/} }  %path for images
+\lstset{inputpath=code/} %path for code
+
+\floatstyle{plaintop}
+\restylefloat{table}
+\captionsetup[table]{aboveskip=0pt,belowskip=0pt,skip=0pt} 
+
+\pagecolor{white}
+
+% Basic page layout (see LaTeX book page 163):
+%
+%               size 8.5 x 11 inch pages
+%    odd side margin 1.25 inches
+%   even side margin 1.25 inches
+%         top margin 1.25 inch
+%        text height 9 inches
+%          tex width 6.25 inches
+%
+%
+% assumed to be set up for single-sided printing, so that the \markright
+% command (i.e. right-hand page) is used. Left hand side of page contains
+% contents of \mydocmarkright, right hand side, page number.
+
+
+\setlength {\textwidth}      {6.25in}
+\setlength {\textheight}     {9in}
+\setlength {\topmargin}      {-0.55in}
+\setlength {\oddsidemargin}  {0.25in}
+\setlength {\evensidemargin} {0.25in}
+% 
+\pagestyle{myheadings}
+%
+\setlength {\parindent}      {0.25in}
+\setlength {\parskip}        {\medskipamount}
+\setlength {\unitlength}     {1in}
+
+%column type for tables that aligns by decimal point
+\newcolumntype{d}{D{.}{.}{-1}}
+
+% define colors
+\definecolor{coverpages}{rgb}{0.5625,0.8125,1.0} %nraoblue atm.
+\definecolor{seccolor}{rgb}{0.0000,0.1992,0.3984}
+\definecolor{subcolor}{rgb}{0.1953,0.1953,0.8045}
+\definecolor{subsubcolor}{rgb}{0.0000,0.4961,1.0}
+\definecolor{nraoblue}{rgb}{0.5625,0.8125,1.0}
+\definecolor{configBackground}{rgb}{0.97,0.97,1.0}
+\definecolor{catalogBackground}{rgb}{1.0,1.0,0.95}
+\definecolor{sbBackground}{rgb}{0.98,1.0,0.98}
+\definecolor{pythonCode}{rgb}{0,0,0}
+\definecolor{pythonDecorators}{rgb}{0.5,0.5,0.5}
+\definecolor{pythonNumbers}{rgb}{0.5,0,0}
+\definecolor{pythonArray}{rgb}{0,0.3,0.8}
+\definecolor{pythonKeywords}{rgb}{0.1,0,0.5}
+\definecolor{pythonSelf}{rgb}{0,0,0}
+\definecolor{pythonStrings}{rgb}{0.7,0.0,0.6}
+\definecolor{pythonTripleStrings}{rgb}{0.4,0.1,0.1}
+\definecolor{pythonComments}{rgb}{0,0.35,0.1}
+\definecolor{pythonBackquotes}{rgb}{0,0,0}
+\definecolor{pythonClassname}{rgb}{0,0,0}
+\definecolor{pythonFunctionName}{rgb}{0,0,0}
+\definecolor{pythonOperators}{rgb}{0,0,0}
+
+% checkmark
+\def\checkmark{\tikz\fill[scale=0.4](0,.35)--(.25,0)--(1,.7)--(.25,.15)--cycle;} 
+
+% Cool Buttons
+\usetikzlibrary{shapes.geometric,shapes.symbols,shadows,calc}
+
+\tikzstyle{astridbuttonstyle} = [ fill = black!30, draw = black!50,
+                                  font={\sffamily}, text=black,
+                                  top color=black!2, bottom color=black!10,
+                                  rounded corners=0.75pt,
+                                  inner ysep=2pt, inner xsep=2pt,
+                                  baseline=(tempname.base)]
+
+\tikzstyle{astridfixedbuttonstyle} = [ fill = black!30, draw = black!50,
+                                       font={\sffamily}, text=black,
+                                       top color=black!1, bottom color=black!20,
+                                       rounded corners=0.75pt,
+                                       baseline=(tempname.base),
+                                       minimum height = 3ex, text height = 1.5ex,
+                                       text depth = 0.25ex, text centered]
+
+\tikzstyle{astridyellowbuttonstyle} = [ fill = yellow!30, draw = black!50,
+                                        font={\sffamily}, text=black,
+                                        top color=yellow!5, bottom color=yellow!45,
+                                        rounded corners=0.75pt,
+                                        inner ysep=2pt, inner xsep=2pt,
+                                        baseline=(tempname.base)]
+
+\tikzstyle{cleobuttonstyle} = [ fill = black!15, draw = black!15,
+                                       font={\ttfamily\small}, text=black,
+                                       inner ysep=2pt, inner xsep=2pt,
+                                       baseline=(tempname.base)]
+
+\newcommand*{\astridfixedbutton}[2]{
+\begin{tikzpicture}[baseline=(tempname.base)]
+\node[astridfixedbuttonstyle, text width={#2}] (tempname) {#1};
+\end{tikzpicture}
+}
+\newcommand*{\astridbutton}[1]{
+\begin{tikzpicture}[baseline=(tempname.base)]
+\node[astridbuttonstyle] (tempname) {#1};
+\end{tikzpicture}
+}
+\newcommand*{\astridyellowbutton}[1]{
+\begin{tikzpicture}[baseline=(tempname.base)]
+\node[astridyellowbuttonstyle] (tempname) {#1};
+\end{tikzpicture}
+}
+\newcommand*{\cleobutton}[1]{
+\begin{tikzpicture}[baseline=(tempname.base)]
+\node[cleobuttonstyle] (tempname) {#1};
+  \draw[black!5, fill=black!5, line width=0pt] ($ (tempname.north west) + (-0.75pt,0.75pt) $) rectangle
+                               ($ (tempname.north east) + (0pt,0pt) $);
+  \draw[black!5, fill=black!5, line width=0pt] ($ (tempname.north west) + (-0.75pt,0pt) $) rectangle
+                               ($ (tempname.south west) + (0pt,-0.75pt) $);
+  \draw[black!30, fill=black!30, line width=0pt] ($ (tempname.south west) + (0pt,0pt) $) rectangle
+                                 ($ (tempname.south east) + (0.75pt,-0.75pt) $);
+  \draw[black!30, fill=black!30, line width=0pt] ($ (tempname.south east) + (0.75pt,0pt) $) rectangle
+                                 ($ (tempname.north east) + (0pt,0.75pt) $);
+  \draw[black!5, fill=black!5, line width=0pt] ($ (tempname.north east) $) --
+                 ($ (tempname.north east) + (0pt,0.75pt)$) --
+                 ($ (tempname.north east) + (0.75pt,0.75pt)$) -- cycle;
+  \draw[black!30, fill=black!30, line width=0pt] ($ (tempname.south west) $) --
+                 ($ (tempname.south west) + (0pt,-0.75pt)$) --
+                 ($ (tempname.south west) + (-0.75pt,-0.75pt)$) -- cycle;
+\end{tikzpicture}
+} %all that!....
+
+
+% command for correct double quotes in pdf and in html versions
+\newcommand{\dq}[1]{``#1''}
+\newcommand{\sq}[1]{\lq{#1}\rq}
+% straight quotation marks
+\newcommand{\ssq}[1]{\textquotesingle{#1}\textquotesingle}
+\newcommand{\sdq}[1]{\textquotesingle\textquotesingle{#1}\textquotesingle\textquotesingle}
+% for tables
+\newcommand{\myalign}[2]{\multicolumn{1}{#1}{#2}}
+
+
+\font\btt=rm-lmtk10
+
+%Headings
+\chapterfont{\color{black}}
+\sectionfont{\color{seccolor}\huge}
+\subsectionfont{\color{subcolor}\Large}
+\subsubsectionfont{\color{subsubcolor}\large}
+% definition for subsubsubsection = topic
+\newcommand{\txtblue}[1]{\textcolor{blue}{#1}}
+\newcommand{\topic}[1]{\noindent{\txtblue{\textbf{
+  \smallskip\center\Large #1}}}\addcontentsline{toc}{paragraph}{#1}}
+
+
+% here's the stuff to get Astrid code looking kind of okay
+\renewcommand{\lstlistingname}{Script}
+\renewcommand{\lstlistlistingname}{List of \lstlistingname s}
+\lstdefinelanguage{PythonAstrid}{
+columns=fullflexible,
+showspaces=false,
+showtabs=false,
+showstringspaces=false,
+keepspaces=true,
+captionpos=b,
+frame=single,
+framerule=1pt,
+tabsize=4,
+upquote=true,
+% Basic
+basicstyle=\ttfamily,
+backgroundcolor=\color{configBackground},
+% Comments
+commentstyle=\color{pythonComments}\slshape,
+% Strings
+stringstyle=\color{pythonStrings},
+identifierstyle=\color{pythonCode},
+morecomment=[s][\color{pythonStrings}]{'}{'},
+morecomment=[s][\color{pythonStrings}]{"}{"},
+morecomment=[s][\color{pythonTripleStrings}]{"""}{"""},
+morecomment=[s][\color{pythonTripleStrings}]{'''}{'''},
+morecomment=[l][\color{pythonComments}]{\#},
+% keywords
+morekeywords={import,from,class,def,for,while,if,is,in,elif,else,
+not,and,or,print,break,continue,return,access,as,del,
+except,exec,finally,global,import,lambda,pass,print,raise,try,
+assert,execfile,Track,OnOff,OffOn,AutoPeak,AutoPeakFocus,AutoOOF,
+Balance,Slew,Catalog,Configure,Nod,Break,Location,Focus,Peak,
+Slew,Tip,BalanceOnOff,Offset,OnOffSameHA,RALongMapWithReference,
+RALongMap,DecLatMapWithReference,DecLatMap,PointMapWithReference,
+PointMap,Daisy,Annotation,Break,Comment,GetUTC,GetLST,Now,WaitFor,
+ChangeAttenuation,GetValue,SetValues,DefineScan,GetCurrentLocation,
+SetSourceVelocity,Spider,Z17,CircleTrack,SubBeamNod},
+keywordstyle={\color{pythonKeywords}\bfseries},
+% additional keywords
+morekeywords={[2]@invariant,pylab,numpy,np,scipy},
+keywordstyle={[2]\color{pythonDecorators}\slshape},
+emph={self},
+emphstyle={\color{pythonSelf}\slshape},
+%
+}
+
+%the glossary
+\loadglsentries{GBTog_glossary}
+\makenoidxglossaries
+
+
+% start the document now
+\begin{document}
+\frontmatter
+\setcounter{page}{0}
+
+%
+% the pdf book cover/title page
+%
+
+% set title information
+\title{\txtseccolor{\Huge Observing With The Green Bank Telescope}}
+\author{\txtseccolor{\Large GBT Scientific Staff}}
+\date{\Large \txtseccolor{\today}}
+
+%Define Frame for cover page
+\newsavebox{\FrameCoverPage}
+\newenvironment{FrameCover}[4]%
+{\begin{lrbox}{\FrameCoverPage}\begin{minipage}[#1][#2][#3]{#4}}%
+{\end{minipage}\end{lrbox}\fbox{\usebox{\FrameCoverPage}}}
+\newcommand{\FramePix}[3][t]{\fbox{\begin{minipage}[#1]{#2} #3\end{minipage}}}
+
+\colorbox{coverpages}{
+\begin{FrameCover}{c}{8.5in}{t}{5.5in}
+\vspace*{\stretch{1}}
+\begin{center}
+\textcolor{green}{\rule{\linewidth}{3.2mm}}
+\textit{\Huge \bf Observing With The\\[5mm]
+\Huge \bf Green Bank Telescope}
+\textcolor{green}{\rule{\linewidth}{3.2mm}}
+\end{center}
+
+\vspace*{\stretch{1}}
+\begin{center}
+\FramePix[c]{4.5in}
+{\includegraphics[width=4.5in, bb = 0 0 798 599]{GBT.jpg} } %0 0 798 599
+\end{center}
+
+\vspace*{\stretch{1}}
+\begin{center}
+{{\LARGE by GBT Scientific Staff\\ \bigskip} \large \today \\ \bigskip Version 4.0}
+\end{center}
+
+\vspace*{\stretch{1}}
+\begin{center}
+{This guide provides essential information for the preparation of
+\\ Scheduling Blocks for observations with the Green Bank Telescope.
+}
+\end{center}
+\end{FrameCover}
+}
+
+\newpage
+\setcounter{page}{0}
+%an intentionally added blank page for the back of the cover page
+\newpage
+
+
+% acknowledgements
+
+% \vspace*{\stretch{1}}
+\vspace*{2in}
+
+\begin{center}
+{{\bigskip \LARGE Authors, Contributors, and Editors\\ \bigskip} 
+\large This Guide is the product of many of the GBT Scientific Staff, with major contributions from:\\
+\bigskip
+\large Dana Balser\\ \bigskip
+\large Jim Braatz\\ \bigskip
+\large David Frayer\\ \bigskip
+\large Frank Ghigo\\ \bigskip
+\large Amanda Kepley \\ \bigskip
+\large Adam Kobelski\\ \bigskip
+\large Karen O'Neil \\ \bigskip
+\large Glen Langston \\ \bigskip 
+\large Ryan Lynch \\ \bigskip
+\large Ron Maddalena\\ \bigskip
+\large Brian Mason\\ \bigskip 
+\large Toney Minter\\ \bigskip
+\large Dan Perera\\ \bigskip
+\large Richard Prestage\\ \bigskip
+\large Scott Ransom\\ \bigskip  } 
+\end{center}
+
+% \newpage
+\pagenumbering{roman}
+\setcounter{page}{-12}
+\pagestyle{plain}
+
+\setcounter{secnumdepth}{4}
+\setcounter{tocdepth}{4}
+\tableofcontents
+
+\listoffigures
+\listoftables
+\lstlistoflistings
+
+\newpage
+\mainmatter
+\pagenumbering{arabic}
+%\setcounter{page}{1}
+\pagestyle{headings}
+\counterwithin{lstlisting}{chapter}
+
+%%%%%%%%%%%%%%%%%%%%       MAIN BODY (start)   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{chapter_introduction.tex}        %intro
+% \input{chapter_observing_process.tex} % the GBT observing process
+% \input{chapter_dss.tex}      % Dynamic Scheduling system
+% \input{chapter_astrid_intro.tex}% Introduction to Astrid
+% \input{chapter_displays_and_cleo.tex}% Astrid near real time display and cleo utilities
+% \input{chapter_sb.tex}       % Scheduling blocks
+% \input{chapter_tactics.tex}  % Observing tactics
+% \input{chapter_vegas.tex}    % VEGAS
+% \input{chapter_guppi.tex}    % Pulsar observing with GUPPI
+% \input{chapter_kfpa2.tex}    % KFPA
+% \input{chapter_w.tex}        % W-band
+% \input{chapter_ccb.tex}      % CCB
+% %\input{chapter_mus.tex}      % Mustang
+% \input{chapter_vlba}         % VLBA
+% \input{chapter_radar}        % radar
+
+% \input{chapter_rfi.tex}      % RFI
+% \input{chapter_weather.tex}  % Weather and dynamic scheduling decisions
+% \input{chapter_computing.tex}% General computing information
+% \input{chapter_remote.tex}   % Remote observing
+% \input{chapter_travel.tex}   % Planning observing and travel
+% \input{chapter_after.tex}    % After your observations
+
+% \newpage
+% \appendix
+
+% \input{appendix.tex} % Wrapper file for appendix topics
+
+%%%%%%%%%%%%%%%%%%%%   (end) MAIN BODY   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\printacronym
+%\printglossary
+% \input{index.tex}
+% \printindex
+
+% \printnoidxglossaries
+
+
+
+
+% backcover
+\newpage
+\thispagestyle{empty}
+\hphantom{foo}
+
+\newpage
+\thispagestyle{empty}
+\hphantom{foo}
+
+\newpage
+\thispagestyle{empty}
+
+\colorbox{coverpages}{
+\begin{FrameCover}{c}{8.5in}{t}{5.5in}
+
+\vspace*{\stretch{1}}
+\begin{center}
+\FramePix[c]{4.5in}
+{\bfseries \includegraphics[width=4.5in,bb=0 0 796 540]{telescopes-1867.jpg} }
+% {\bfseries \includegraphics[width=4.5in]{telescopes-1867.jpg} }
+\end{center}
+
+\vspace*{\stretch{1}}
+
+\end{FrameCover}
+}
+
+\end{document}

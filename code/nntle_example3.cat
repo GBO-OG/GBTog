@@ -1,0 +1,4 @@
+FORMAT    = NNTLE
+USERADVEL = 0
+URL       = http://www.celestrak.com/NORAD/elements/gps-ops.txt
+Name      = 'GPS BIIR-2'

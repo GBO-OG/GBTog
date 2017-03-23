@@ -1,0 +1,39 @@
+\mychapter{The GBTSTATUS IF Path Nomenclature}\label{appendix:gbtstatus}
+
+The nomenclature used for the \gls{IFpath} information in the \gls{Astrid} Status Tabs:
+\begin{description}[leftmargin=*]
+\item[{\bf IF}\#] The \# displayed is the number corresponding to the \gls{IFRack} 
+switch in use. The value displayed is the \gls{RF} power in Volts detected by the 
+\gls{IFRack}. 
+\item[{\bf CM}\#] The \# displayed is the number corresponding to the Converter 
+Module in use. The value displayed is the \gls{RF} power in Volts coming out of the 
+Converter Module after the \gls{LOtwo} and \gls{LOthree} mixers and before the Converter
+Module filters. 
+\item[{\bf CF}\#] The \# displayed is the number corresponding to the Analog 
+Filter in use. The value displayed is the \gls{RF} power in Volts coming out of the 
+\gls{AFRack} after all filters have been applied (used with 100MHz Converters).
+\item[{\bf SG}\#] The \# displayed is the number corresponding to the Analog 
+Filter in use. The value displayed is the \gls{RF} power in Volts coming out of the 
+\gls{AFRack} after all filters have been applied (used with 1.6~GHz Samplers.
+\item[{\bf VEGAS-J}\#] The \# displayed is the number corresponding to the port 
+of \gls{VEGAS} in use. The value displayed is the power level in dBFS. For best
+performance, it should be approximately -20 dBFS.
+\item[{\bf Radar-Port}\#] The \# displayed is the number corresponding to the port
+of the Radar in use.
+\item[{\bf DCR-Port}\#] The \# displayed is the bank and number corresponding to 
+the port of the \gls{DCR} in use. The value displayed is the total power in raw
+counts. 
+\item[{\bf TSys}\#] The \# displayed is the number corresponding \gls{DCR} port
+in use. The value displayed is the system temperature as reported by the \gls{DCR}
+(should be considered a loose approximation).
+\item[{\bf backendIF}] The value displayed is the frequency of the Doppler track 
+rest frequency as seen by the backend, in GHz.
+\end{description}
+
+%\item[{\bf ACS-Port \#}] The \# displayed is the number corresponding to the port 
+%of the Spectrometer in use. The value displayed is the duty cycle in 
+%db \footnote{$x$ represented in db is given by $10 \log{x}$}.
+%This value is relative to the optimum power level; for best performance, it should
+%be between -3 and +3 db.
+%\item[{\bf SPP-Port \#}] The \# displayed is the number corresponding to the port 
+%of the \gls{SP} in use. The value displayed is the power level in db.

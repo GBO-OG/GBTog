@@ -1,0 +1,35 @@
+%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\mychapter{A Note on Angle formats and units in Astrid and Catalogs}\label{appendix:angles}
+
+
+There are two formats for angles in Observing Scripts and Catalogs:
+
+\begin{itemize}
+\item sexegesimal: e.g., hh:mm:ss[.ss], dd:mm:ss[.ss]
+\item decimal numbers, e.g, ddd.ddd
+\end{itemize}
+
+When the quantity is RA or HA, an angle given in sexegesimal is hours, minutes, seconds of time.
+
+For all other angle quantities (e.g., dec, az, el, glon, glat) an angle given in sexegesimal is degrees, minutes, seconds of arc.
+
+In \dq{Location} and \dq{Offset} objects, a quantity given as a decimal number is always understood as being in units of degrees of arc, regardless of the type of unit.
+However in Catalogs, a decimal number for RA or HA is assumed to be hours; for other angles (DEC, Az, El, Glon, Glat) it is degrees of arc.  
+
+For example, if one is specifying an Offset object as in the following Astrid directive:
+\begin{verbatim}
+    OnOff( "3C286", Offset("J2000", "00:04:00", 0.5), 60, "1")
+\end{verbatim}
+The offset will be 4 minutes of time in RA and 0.5 degrees of arc in DEC.
+(The coordinate mode \dq{J2000} means the coordinate pair is (RA,DEC), hence sexegesimal RA is assumed to be in hours.)
+
+Alternately if one says:
+\begin{verbatim}
+    OnOff( "3C286", Offset("J2000", 1.0, 0.5), 60, "1")
+\end{verbatim}
+The offset will be one degree of arc in RA and 0.5 degrees of arc in DEC.
+
+\newpage
+
+
+%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

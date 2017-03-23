@@ -1,0 +1,593 @@
+\chapter{Observing Tactics and Recommendations}\label{chap:tactics}
+
+%============================================================================
+
+\section{Active Surface (AS) Strategies}
+
+If you are observing at a frequency of 8~GHz or higher then you should
+use the \glsfirst{AS}.  At frequencies below 8~GHz the \gls{AS} does not provide any
+improvements to the efficiency of the \gls{GBT}. Due to \gls{RFI} considerations
+the \gls{AS} may be turned off for lower frequency observations.
+
+{\bf You do not need to do anything to turn on or off the use of  the \gls{AS}.
+The \gls{GBT} telescope operator performs these tasks.}
+
+%============================================================================
+\section{AutoOOF Strategy}\label{sec:oof_strategy}
+AutoOOF is recommended for observing at frequencies of 26~GHz and higher and only
+available for use with Rcvr26\_40 (\gls{Kaband}), Rcvr40\_52 (\gls{Qband},
+Rcvr68\_92 (\gls{Wband}, and Rcvr\_PAR (\gls{MUSTANG}).
+For a description of this procedure, refer to Section~\ref{sec:AutoOOFsec}.
+For the associated data display, see Section~\ref{sec:oofdatadisplay}.
+It is important to note the following points when using AutoOOF:
+
+\begin{description}
+\item[Choose a bright calibrator:] preferably at least 7 K in the observed band, which
+is about 4 Jy at Q-band. You should not rely on the catalog flux to be accurate
+as it is often many years out of date.  The ALMA Calibrator Source Catalogue has
+an extensive record of the flux densities for many of the bright 3mm sources
+(\htmladdnormallink{https://almascience.eso.org/sc/}{https://almascience.eso.org/sc/}).
+If you are not sure then run a point/focus scan on the calibrator first in order to
+confirm its strength.  Remember, you need to be able to detect the source when
+the subreflector is $\pm{5}\lambda$ out of focus which typically reduces its peak
+intensity by a factor of 8.
+
+\item[Allow approximately 20 minutes for an AutoOOF:] The AutoOOF procedure will
+obtain three \gls{OTF} maps, each taken at a different focus position.  Each map
+will require nearly 1 minute of intial \gls{MC} overhead and last 316 seconds
+with Rcvr26\_40, 300 seconds with Rcvr40\_52, and 366 seconds with Rcvr68\_92.
+Processing will then require 1 minute for a total of 19--22 minutes.
+
+\newpage
+
+\item[Use AutoOOF to derive pointing and focus offsets:] The processing is launched
+automatically upon completion of the third map, and the result is displayed in the
+OOF plug-in tab of Astrid. It is incumbent upon the user to examine the solutions,
+and click the button (in the Astrid DataDisplay tab) to send the selected solution
+to the active surface. It is recommended that when sending the solutions, you use
+the yellow button in the OOF display tab labeled \dq{Send Selected Solution with
+Point and Focus Corrections}. By using this method, it is no longer necessary to
+follow AutoOOF with another AutoPeakFocus.
+
+\item[Running AutoOOF first:] If you plan to run AutoOOF as the first thing during
+your observing session, we recommend running an AutoPeakFocus before the AutoOOF
+for all receivers except Rcvr68\_92 (See next point). Subsequent runs of AutoOOF will
+not need a pre-point/focus as small errors in these values do not harm the results.
+
+\item[AutoOOF with the W-band (68--92~GHz) recevier:]\ \\
+\begin{itemize}
+\item {\bf Use AutoOOF before AutoPeakFocus:} Blind pointing offsets at W--band
+(68--92~GHz) frequencies are similar to beam sizes.  The source may be missed
+in the simple Az--El scans used by the Peak procedure.  In These cases, AutoOOF should
+be run before AutoPeakFocus.
+\item {\bf AutoOOF is not necessary for daytime observations of extended sources:}
+While beam sizes can vary significantly during the day (10--14\arcsecond), this has little
+effect on main-beam efficiency used for the calibration of extended sources.  Therefore,
+extended sources may be observed during the day without the AutoOOF corrections if the
+science is not impacted by the primary beam variations.
+\end{itemize}
+
+\item[AutoPeakFocus after AutoOOF:] AutoPeakFocus may be run as a sanity check on the
+AutoOOF solution.  If Peak/Focus scans were performed before AutoOOF, then source amplitude
+should be greater than what was seen before the surface correction was sent.  Additionally,
+AutoPeakFocus pointing and focus corrections should agree with values derived by AutoOOF.
+
+\end{description}
+
+\subsection{How long does the solution remain valid?}
+\begin{itemize}
+
+\item {\bf Nighttime}: If the corrections are measured at least an hour after sunset,
+then they should last for the next few hours as the backup structure cools off.
+This can take many hours if it was a sunny day.  At frequencies below 90~GHz, turning
+off the corrections sometime between midnight and 3AM may improve the surface if a
+sidelobe begins to appear on bright pointing sources.
+
+\item {\bf Daytime}: During the daytime, this is a difficult question to answer, as it
+depends on how much the pose of the telescope is changing with respect to the Sun,
+cloud cover changes, etc. The answer can be anything from 1-4 hours. In practice, we
+suggest running an AutoPeak every 30-40 minutes to look for characteristics outlined below.
+
+\item {\bf Periodically Examine Peak Scans}: A new AutoOOF may be necessary if the
+following characteristics are seen:
+\begin{itemize}
+\item Significant sidelobes begin to appear.
+\item The beam size increases by more than 10\%.
+\item Source amplitude decreases systematically by 15\% or more.
+\end{itemize}
+\end{itemize}
+
+\noindent More information on AutoOOF can be found at\\ \htmladdnormallink
+{https://safe.nrao.edu/wiki/bin/view/GB/PTCS/AutoOOFInstructions}
+{https://safe.nrao.edu/wiki/bin/view/GB/PTCS/AutoOOFInstructions}
+
+
+%============================================================================
+\newpage
+\section{Balancing Strategies}\label{sec:balancestrategy}
+
+The \gls{GBT} \gls{IFsys} has many ways to add gain and/or attenuation
+in the \gls{IFpath}, depending upon the desired configuration. Before taking
+data with the \gls{GBT}, the observer must ensure that all components along
+the \gls{IFpath} have optimum input power levels; this process is referred to
+as \dq{balancing}. This will ensure for example that no components saturate
+and that amplifiers are in the most linear part of their dynamic range.
+The system automatically adjusts power levels to optimum values when you 
+issue the {\bfseries{\textcolor{pythonKeywords}{Balance}}()} command in
+\gls{Astrid}. The following discussion gives guidelines for when and how often to
+use the {\bfseries{\textcolor{pythonKeywords}{Balance}}()} command.
+
+Strategies for balancing the \gls{IF} power levels depend upon the backend,
+the observing frequency, the observing tactics, the weather and the objects
+being observed. The \gls{DCR} has a dynamic range of about 10
+\footnote{From about 0.5 to 5 Volts of \gls{IF} power in the \gls{IFRack}.}
+in its ability to handle changes in the brightness of the sky as seen by the 
+\gls{GBT}. The sky brightness can change because of continuum emission of a
+source or a maser line as you move on and off the source.  It can also change
+due to changes in the atmosphere's contribution to the system temperature
+as the elevation of the observations change or due to the weather.
+
+Whenever you {\bfseries{\textcolor{pythonKeywords}{Balance}}()} you almost
+always change the variable attenuator.  Each attenuator setting has a
+unique bandpass shape. So if you change attenuators then you will likely see
+changes in the bandpasses and \glspl{baseline} of the raw data.  
+
+There are not any set--in--stone rules for when an observer should
+balance the \gls{GBT} \gls{IFsys}.  However there are some guidelines which
+will allow you to determine when you should balance the \gls{IFsys}.  Here are
+the guidelines:
+
+\begin{enumerate}[label=\bfseries{\arabic*.},leftmargin=*,
+labelindent=\parindent]
+\item You should balance the \gls{IFsys} after performing a configuration.  
+\item You should minimize the number of times you balance when observing.
+\item If you know ${\rm \gls{Tsys} + \gls{Tsrc}}$ will change by more than
+a factor of two (3~dB\footnote{A change in power from ${\rm P_1}$ 
+to ${\rm P_2}$ can be represented in dB by ${10 \log_{10}{(P_1/P_2)}}$})
+when you change sources (not between and on and off observation) you should
+consider balancing.
+\item Try to avoid balancing while making maps.
+\item Never balance between \dq{signal} and \dq{reference} observations (such
+as during an on/off observation).
+\item If you are observing target sources and calibration sources then
+try not to balance between observations of the targets and calibrators.
+\end{enumerate}
+
+\noindent {\bf Note}:
+\begin{itemize}[leftmargin=*]
+\item If during your observing you expect to see a change in power levels on
+the sky that are roughly equivalent to the \gls{GBT} system temperature, then
+you should contact your \gls{GBT} support person to discuss balancing strategies.
+There are no global solutions and each specific case must be treated independently.
+
+\item If the system temperature between \dq{signal} and \dq{reference} observations
+differ by a factor of two or more, {\bfseries{\textcolor{pythonKeywords}{BalanceOnOff}}()}
+(see \S~\ref{sec:balanceonoff}) should be used in place of
+{\bfseries{\textcolor{pythonKeywords}{Balance}}()}. This will balance the \gls{IF}
+power levels at the midpoint of the two power levels at each sky position.
+
+\end{itemize}
+
+\newpage
+
+\subsection{Balancing VEGAS}
+
+There are two aspects to \gls{VEGAS} balancing that will produce separate error
+messages, so the user should check the origin carefully:
+
+\begin{enumerate}[label=\bfseries{\arabic*.},leftmargin=*,
+labelindent=\parindent]
+\item {\bf Adjusting \gls{IF} power levels upstream of the \gls{VEGAS} \gls{ADC}}:
+Power levels upstream of the \gls{VEGAS} \glspl{ADC} are balanced so that the
+power going into an \gls{ADC} is at an acceptable level.
+
+\begin{itemize}[leftmargin=*]
+\item {\bf Balancing will fail if the input \gls{IF} power levels to \gls{VEGAS}
+is more than $\mathbf{\pm 2}$ dB from the target value of -20 dBFS}. \gls{VEGAS}
+has a much higher range than that, but it is extremely rare that the
+observation/equipment combination should prevent the balancing algorithm from
+meeting the target.  A conservative limit was chosen since a failure normally
+means that some part of the system is not configured correctly, or that there
+is hardware failure.  If an \gls{IF} balancing failure occurs, the user
+(or operator) should look for errors in the \gls{IFsys} and can view
+the actual \gls{IF} power levels in the \gls{VEGAS} \gls{CLEO} screen
+(see \S~\ref{sec:vegas_cleo}).  If they are significantly different from
+-20 dBFS, there is a problem somewhere in the \gls{IF} chain.
+
+\item {\bf If the power levels are different from -20 dBFS, but close to it,
+there may not be a real problem}.  In some cases, the \gls{IF} balancing will
+fail due to an excceptional, but acceptable circumstance; for example, looking
+at an extremely bright source, or using a spectral window close to the edge
+of the recevier passband.  The \gls{IF} balancing failure does not cause an
+abort, and it is often acceptable to continue observing under these circumstances.
+
+The useable dynamic range of \gls{VEGAS} is actually $>$ 20 dB.  It is set at a
+low level by quantization effects, and at high levels by saturation.  If the
+\gls{IF} power level looks reasonable, the next check is to look at the
+\gls{ADC} histogram counts.  As long as the histogram looks like a Gaussian
+distribution, witha a FWHM around 20 counts or larger, but with no counts
+approaching $\pm 127$, then the \gls{IF} level into \gls{VEGAS} is acceptable
+(see Figure~\ref{fig:vegasdm}).  Make sure you monitor the \gls{ADC} histogram
+through all phases of your observation (e.g. switching on and off a bright source).
+\end{itemize}
+
+\item {\bf Adjusting the \dq{digital gain} inside the \gls{VEGAS} processing
+firmware}: There should be no circumstances (e.g. an FFT overflow) which result
+in lost precision.
+\begin{itemize}[leftmargin=*]
+\item {\bf The digital gain should never fail to balance}. It is a property
+of the firmware design of each mode, not the \gls{IF} input.  A failure
+of the digital gain balancing indicates a serious problem, and engineering
+support should be called.
+\end{itemize}
+
+\end{enumerate}
+
+%============================================================================
+
+\section{Calibration Strategies}
+
+For best flux density calibration of spectra, it is recommended that you should
+observe continuum flux density calibration sources at least once during an
+observing session. To do this, do a Peak/Focus on the calibrator, followed
+by an observation in the same spectral line setup used for the program sources.
+This will give the relation of flux density to antenna temperature as a function
+of frequency that can be applied to the program spectra.
+
+Of course, there may be other outstanding reasons to perform calibration
+observations more often.  If you have concerns over how often you should observe
+a calibrator you should get into contact with your \gls{GBT} support person.
+
+Flux density histories for many of the bright 3mm point sources can be found
+in the ALMA Calibrator Source Catalogue
+(\htmladdnormallink{https://almascience.eso.org/sc/}
+{https://almascience.eso.org/sc/}).
+
+%============================================================================
+\newpage
+
+\section{Pointing and Focusing Strategies}\label{sec:pointfocus}
+
+How often you need to point and focus the \gls{GBT} depends on the frequency
+of your observations, the weather conditions, whether or not it is day
+or night-time, and the amount of flux error that your experiment can
+tolerate from pointing and focus errors.  See Table~\ref{table:wind} for guidelines
+on how often to Point/Focus.  Note that spacings between Point/Focus observations may
+be increased if results appear stable, especially during the night.
+
+Within the \gls{DSS}, the tracking error $\sigma_{tr}$  (arc seconds) as a function of
+wind speed $s$ ($m s^{-1}$) is given by 
+\begin{align}
+\sigma_{tr}^2 = \sigma_0^2 + \left(\dfrac{s}{3.5}\right)^4
+\label{eq:wind}
+\end{align}
+Where $\sigma_0=1.32$\arcsecond\ at night and $\sigma_0=2.19$\arcsecond\ during
+the day, and is the tracking and pointing error with no winds. The \gls{DSS} will
+only schedule observations if the tracking error is smaller than a specified fraction
+($f<f_{max}$) of the beam \gls{FWHM} ($\sigma_{beam}$) given by
+\begin{align}
+f = \frac{\sigma_{tr}}{\sigma_{beam}} = \frac{\sigma_{tr}\nu}{748}
+\label{eq:dss_wind_limit}
+\end{align}
+
+where $\nu$ is the observing frequency in GHz.  Values for $f_{max}$ in the \gls{DSS}
+are currently set at 0.2 for receivers below 50~GHz, 0.22 for receivers above 50~GHz
+(Rcvr68\_92) and 0.4 for filled arrays (Rcvr\_PAR).  An $f_{max}$ value of 0.2 assures
+observers that their flux uncertainty due to tracking errors is no more than 10\%,
+assuming they are observing a point source.
+
+\begin{table}[!h]
+\begin{center}
+\caption[Observing wind default limits and Point/Focus strategies]
+{Observing wind limits using DSS default parameters and suggested time periods between
+Point and Focus observations.
+\label{table:wind}}
+\begin{tabular}{l d d d c c}
+\toprule
+& & \multicolumn{2}{c}{Wind limit $\left(m s^{-1}\right)$} &
+\multicolumn{2}{c}{Recommended Point/Focus spacing} \\ \cmidrule(lr){3-4} \cmidrule(lr){5-6}
+Receiver &
+\multicolumn{1}{c}{$\nu$ (GHz)}&
+\multicolumn{1}{c}{Day} &
+\multicolumn{1}{c}{Night} &
+\multicolumn{1}{c}{Day} &
+\multicolumn{1}{c}{Night} \\
+\midrule
+
+Rcvr\_342       & 0.340  & 73.4 & 73.4 & \multicolumn{2}{c}{--- Initial Peak only ---} \\
+Rcvr\_450       & 0.415  & 66.5 & 66.5 & \multicolumn{2}{c}{--- Initial Peak only ---} \\
+Rcvr\_600       & 0.680  & 52.0 & 52.0 & \multicolumn{2}{c}{--- Initial Peak only ---} \\
+Rcvr\_800       & 0.770  & 48.8 & 48.8 & \multicolumn{2}{c}{--- Initial Peak only ---} \\
+Rcvr\_1070      & 0.970  & 43.5 & 43.5 & \multicolumn{2}{c}{--- Initial Peak only ---} \\
+Rcvr1\_2        & 1.4    & 36.2 & 36.2 & \multicolumn{2}{c}{--- Initial Peak and Focus only ---} \\
+Rcvr2\_3        & 2.0    & 30.3 & 30.3 & \multicolumn{2}{c}{--- Initial Peak and Focus only ---} \\
+Rcvr4\_6        & 5.0    & 19.1 & 19.1 & Hourly on hot afternoons & Every 2-3 hours  \\
+Rcvr8\_10       & 10.0   & 13.5 & 13.5 & Hourly on hot afternoons & Every 2-3 hours   \\
+Rcvr12\_18      & 15.0   & 11.0 & 11.0 & Hourly & Every 1-2 hours \\
+RcvrArray18\_26 & 25.0   & 8.3  &  8.5 & Hourly & Every 1-2 hours \\
+Rcvr26\_40      & 32.0   & 7.1  &  7.4 & Hourly & Hourly \\
+Rcvr40\_52      & 45.0   & 5.5  &  6.1 & Every 30-60 minutes & Hourly \\
+Rcvr68\_92      & 80.0   &  -   &  4.4 & Every 30-60 minutes & Every 30-60 minutes \\
+Rcvr\_PAR       & 90.0   & 5.5  &  6.1 & Every 30-60 minutes & Every 30-60 minutes \\
+
+\bottomrule
+\end{tabular}
+\end{center}
+\end{table}
+
+Table~\ref{table:wind} provides wind limits using default \gls{DSS} parameters.
+Observers may wish to alter some parameters in the \gls{DSS} to better suit their observing
+requirements.  For example, pointing may be relaxed for extended sources (i.e.
+set $\theta_{src}>0$ in the \gls{DSS}), or more tightly constrained (a value of $f_{max}=0.14$
+in the \gls{DSS} assures no more than 5\% flux uncertainty due to tracking errors).
+You may request changes to DSS control parameters by contacting your \gls{GBT} \dq{friend}
+and emailing helpdesk-gb@nrao.edu.
+
+For further information on \gls{DSS} control parameters see
+Appendix~\ref{appendix:dsscontrolparameters}. See DSS Project Note 18.1\\
+(\htmladdnormallink
+{https://safe.nrao.edu/wiki/pub/GB/Dynamic/DynamicProjectNotes/dss\_20nov2014.pdf}
+{https://safe.nrao.edu/wiki/pub/GB/Dynamic/DynamicProjectNotes/dss_20nov2014.pdf})
+for tracking performance and parameters used in Equation~\ref{eq:wind}.
+
+%============================================================================
+\newpage
+
+\section{Spectral Configurations}
+
+It is good practice for the observer to schedule a short observation
+towards a strong spectral line source at the beginning of each observing
+session.  The observer should process and check the spectra before
+proceeding with the observations to confirm the spectral configuration.
+It is also important to check the system temperatures for each beam.
+Poor configuration choices for the backend will sometimes be detected as
+anomalous system temperatures.
+
+%============================================================================
+
+\section{Mapping Strategies}
+
+The sky should be sampled five times across the beam (i.e., the scan rate and
+integration times should be set such that there are five integrations recorded
+in the time the telescope scans across an angle equal to the beam FWHM) and
+there should be four switching periods per integration (see Mangum, Emerson,
+and Greisen 2007 A\&A, 474, 679 for details).  For \gls{VEGAS}, minimum recommended
+integration times and switching periods are listed in Table~\ref{tab:vegas_modes}
+and \S~\ref{sec:vegas_blanking}.  The \gls{DCR} has a minimum integration time of
+100 ms.
+
+The \gls{GBT} Mapping Calculator is a useful tool for planning mapping
+observations and may be used to provide \gls{Astrid} commands and
+parameters for many of the mapping scan types.  The mapping calculator can be
+found at \htmladdnormallink
+{http://www.gb.nrao.edu/$\sim$rmaddale/GBT/GBTMappingCalculator.html}
+{http://www.gb.nrao.edu/~rmaddale/GBT/GBTMappingCalculator.html}.
+
+It is important to take account of the overheads involved with mapping scans.
+For example, it takes approximately 25 seconds to start a
+{\bfseries{\textcolor{pythonKeywords}{RALongMap}}} mapping scan. So observers
+scheduling scans much shorter than 1 minute will lose a large fraction of their
+observing time to overheads.  Using Daisy pattern scans are more efficient for
+scheduling small maps, as a region can be mapped in a single scan.  However
+there is an additional delay in starting a
+{\bfseries{\textcolor{pythonKeywords}{Daisy}}} procedure, as the system computes
+the antenna trajectories. As a rule of thumb, maps larger than about 10--20 beam
+\gls{FWHM} in size should use the
+{\bfseries{\textcolor{pythonKeywords}{RALongMap}}} or
+{\bfseries{\textcolor{pythonKeywords}{DecLatMap}}} scan types while smaller maps
+should use 
+{\bfseries{\textcolor{pythonKeywords}{Daisy}}} scans. For practical reasons, it
+is often best to keep the scan length under about 15 minutes.
+
+Observers wishing to use the \gls{GBT} mapping pipeline may periodically wish
+to include reference scans into their \glsdesc{SB}s.
+Further information on using the pipeline can be found at\\ \htmladdnormallink
+{https://safe.nrao.edu/wiki/bin/view/GB/Gbtpipeline/PipelineRelease}
+{https://safe.nrao.edu/wiki/bin/view/GB/Gbtpipeline/PipelineRelease}.
+
+
+%============================================================================
+
+\section{High Frequency Observing Strategies}
+
+When observing at frequencies above 10~GHz you should be aware that additional
+calibration measurements may be necessary.  The telescope efficiency can become
+elevation dependent, atmospheric opacities are important and the opacities can
+be time variable.  You should contact your \gls{GBT} support person to discuss
+these issues.
+
+All the \gls{GBT} high frequency receivers have at least two beams (pixels)
+on the sky.  You should make use of both of these during your observations
+if possible.  For example, if you are doing position switched observations
+and your source is not extended then you can use the \gls{Astrid}
+{\bfseries{\textcolor{pythonKeywords}{Nod()}}} procedure to observe (see
+\S~\ref{sec:observingscans}).
+
+%============================================================================
+
+\section[Observing Strategies For Strong Continuum Sources]
+{Observing Strategies For Strong Continuum Sources}
+
+Spectral line observations of strong continuum sources leads to a great
+amount of structure (i.e. ripples) in the observed spectra. So observations of
+strong continuum sources requires careful consideration of the observing
+setup and the techniques used.
+
+If you are trying to observe weak broad spectral lines (wider than
+$\sim$100~MHz) toward a source with strong continuum emission (more than 1/10th
+the system temperature), then you should consider using double position switching.
+This technique is discussed in an Arecibo memo by Tapasi Ghosh and Chris Salter
+which can be found at \htmladdnormallink
+{http://www.naic.edu/~astro/aotms/performance/2001-02.ps}
+{http://www.naic.edu/$\sim$astro/aotms/performance/2001-02.ps}.
+
+Another issue is finding a proper \gls{IF} balance that allows both the \dq{on}
+and \dq{off} source positions to remain in the linear range of the backend
+being used.  This means that one must find the \gls{IF} balance in both the
+\dq{on} and \dq{off} position and then split the difference -- assuming that
+the difference in power levels between the \dq{on} and \dq{off} do not 
+exceed the dynamic range of the backend.  The
+{\bfseries{\textcolor{pythonKeywords}{BalanceOnOff()}}} procedure in
+\gls{Astrid} can be used to accomplish this type of balancing
+(see \S~\ref{sec:utilityscans}).
+
+%===================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+%\section{Pulsar Observing}
+
+%TBD.
+
+%============================================================================
+%\section{VLBI}
+%
+%%Scheduling is done through the VLBA analysts in Socorro. Schedules are 
+%%prepared with the SCHED program. The GBT uses the standard VLBA schedule 
+%%file ("*.crd" file). The user needs to prepare a ".key" file for SCHED in 
+%%the usual way and send it to the VLBA analysts.
+%
+%The \GBT\ is different from
+%the standard \VLBA\ stations.
+%1) Changing between Gregorian receivers in the receiver turret takes 1-2
+%minutes; and 2) Changing between Gregorian and prime focus requires 
+%about 10 minutes. Changing from one prime focus receiver to another requires 
+%about 4 hours, because one feed must be physically removed and replaced with 
+%another. 
+%
+%It is recommended to allow for pointing and focus touch-ups when observing at 
+%frequencies of 8\,GHz and higher. 
+%Table~\ref{table:vlbi} shows the recommended maximum 
+%intervals between pointings.
+%At the higher frequencies (18-26 GHz and 40-50 GHz) also do a pointing check when the source elevation has changed by 15 degrees or more.
+%
+%
+%\begin{table}[!h]
+%\begin{center}
+%\caption[VLBI Pointing Recommendations]{Recommended maximum intervals between
+%pointing observations during VLBI observerations.\label{table:vlbi}}
+%\begin{tabular}{|l|l|}
+%\hline
+%Frequency Band &	Interval between pointing scans \\ \hline
+%8--10\,GHz  &	4--5 hours \\
+%12--16\,GHz &	3--4 hours \\
+%18--26\,GHz &	1.5--2 hours \\ 
+%40--50\,GHz &	30--45 minutes \\
+%\hline
+%\end{tabular}
+%\end{center}
+%\end{table}
+%
+%The observer should select as a pointing source 
+%a strong continuum source (flux density $>0.5$~Jy)
+%within about 15 degrees and at similar elevation as the program source. 
+%Include the pointing calibration source in the \VLBI\ observing schedule at 
+%the recommended intervals. Allow about 8 minutes for the pointing and focus 
+%check in the schedule.
+%Note also that significant pointing errors at 7mm can happen when the wind speed is greater than 3 m/sec (7 miles per hour). For 1.3 cm significant pointing errors can occur for wind speeds greater than 6 m/sec (14 miles per hour). Refer to \S~\ref{sec:pointfocus} for details.
+%
+%To include a pointing and focus scan in your schedule, put commands into your 
+%\dq{.key} file similar to the following:
+%\begin{lstlisting}[frame=single,framerule=2pt,backgroundcolor=\color{white}]
+%comment='GBT pointing scan.'  peak=1
+%stations =  gbt_vlba
+%source = 'J0920+4441'  dwell = 08:00  vlamode='VA' norecord /
+%nopeak
+%\end{lstlisting}
+%It is important to specify only the \GBT\ (\dq{stations=gbt\_vlba}) when putting 
+%in \dq{PEAK=1}. Otherwise it may do a reference pointing for the whole \VLBA, and 
+%if the selected pointing source is under about 5 Jy for the \VLBA, it could 
+%produce bad results.
+%
+%VLBI observers should see 
+%\htmladdnormallink{http://www.gb.nrao.edu/~fghigo/gbtdoc/vlbinfo.html}{http://www.gb.nrao.edu/~fghigo/gbtdoc/vlbinfo.html}
+%for more details.
+
+%============================================================================
+%\section{RADAR}
+
+%TBD.
+
+
+%============================================================================
+%\section{Single Dish VLBA Recording}
+
+%TBD.
+
+
+
+%============================================================================
+%\section{Spectral Line Observing Strategies}
+
+%1) position switch
+
+%2) nod
+
+%3) frequency switch
+
+%============================================================================
+%\section{Continuum Observing Strategies}
+
+%TBD.
+
+%============================================================================
+%\section{Balancing The Converter Rack}
+%
+%When using pulsar or Radar backends it may be necessary to set
+%attenuation levels in the Converter Rack.  This currently does not
+%happen automatically.  This can be accomplished in one of two ways.
+%The first is to specify the target power level (in volts) of the
+%Converter Rack modules.  This is accomplished using the BalConvRack()
+%function.  Here is an example of how you would use this function in an
+%Observing Script:
+%
+%\begin{lstlisting}
+%# make the function available
+%execfile("/users/tminter/astrid/BalConvRack.py")
+%#
+%# to use:  BalConvRack( module_list, target_values)
+%#
+%#   module_list is an array with a list of converter module numbers.
+%#   target_values is a corresponding array with a list of RF values.
+%#
+%# For example if one wants to adjust CM1 to an RF value of 2.5,
+%#   and CM5 to 3.5,
+%#   then one says: 
+%#
+%BalConvRack( [1,5], [2.5, 3.5] )
+%#
+%#
+%# This adjusts the converter module attenuators such that
+%# the target power levels are attained, to within a threshhold
+%# of 0.15 volts as read by the RF power samplers.
+%\end{lstlisting}
+%
+%The second method is to specify the attenuation settings of the
+%Converter Rack attenuators.  All of the Converter Rack attenuators
+%can be set to the same value using:
+%
+%\begin{lstlisting}
+%# make the function available
+%execfile("/users/tminter/astrid/SetConverterRackAttenuation.py")
+%#
+%# set all the attenuators to 15.5 dB
+%SetConverterRackAttenuation(15.5)
+%\end{lstlisting}
+
+
+
+%%%%%%%%%%%%% From balancing
+%\gls{VEGAS} has the dynamic range to handle up to a factor of 10 change
+%in the sky brightness.\footnote{A factor of 10 from its optimal balance
+%point in each direction.}
+

@@ -1,0 +1,59 @@
+%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\mychapter{Location and Offset Objects}\label{appendix:locations}
+
+A Location is used to represent a particular location on the sky. Locations 
+can be specified in the following coordinate modes: \dq{J2000}, \dq{B1950}, 
+\dq{RaDecOfDate}, \dq{HaDec}, \dq{ApparentRaDec}, \dq{Galactic}, \dq{AzEl}, and \dq{Encoder.} 
+A Location is specified by two values, the meanings of which are dependent on 
+the coordinate mode chosen. E.g. For J2000, the two values are time and 
+degrees. 
+
+Here is an example of 
+how to specify a Location:
+\begin{verbatim}
+location = Location("J2000", "16:30:00", "47:23:00")
+\end{verbatim}
+
+An Offset object represents a displacement from a Location.
+
+Here is an example of 
+how to specify an Offset:
+\begin{verbatim}
+offset   = Offset("J2000", 0.1, 0.2, cosv=True)
+\end{verbatim}
+which represents an offset of 0.1 degrees in RA and 0.2 degrees in DEC.
+"cosv=True" (the default)  means the RA offset is divided by cosine Dec before
+applying the offset.
+
+Two Offsets may be added together, but they must have the same coordinate type.
+For example:
+\begin{verbatim}
+off1   = Offset("J2000", 0.1, 0.2, cosv=True)
+off2   = Offset("J2000", 1.0, 1.0)
+totaloffset = off1 + off2
+
+BUT:
+off3   = Offset("B1950", 1.0, 1.0)
+totaloffset = off1 + off3
+-- result in an error!
+\end{verbatim}
+
+
+In Astrid scripts, one may add an Offset to a Location, if they have the same coordinate types.
+
+Here is an example of 
+how to add an Offset to a Location:
+\begin{verbatim}
+myoffset = Offset("B1950", "00:00:30", "00:00:45")
+mysrclocation = Location("B1950", "16:30:00", "47:23:00")
+mynewposition = mysrclocation+myoffset
+\end{verbatim}
+
+But note that addition is not commutative for Astrid!!
+The following produces a validation error in Astrid.
+\begin{verbatim}
+mynewposition = myoffset + mysrclocation 
+-- ERROR!
+\end{verbatim}
+
+\newpage

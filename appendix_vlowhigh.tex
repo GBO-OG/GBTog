@@ -1,0 +1,28 @@
+\chapter{Usage of vlow and vhigh}\label{appendix:vlowhigh}
+
+The configuration keywords {\bf vlow} and {\bf vhigh} give the range of
+velocities of all sources to be observed. This information is used to set
+various filters in the system that will simultaneously cover the required
+range of velocity. Setting the velocity for each specific source is done
+later in the \gls{SB}. For galactic sources where the range of velocities
+is rather small it is usually best to set both vlow and vhigh to zero. 
+
+When strong \gls{RFI} is present is it best not to use vlow and vhigh.  The use
+of vlow and vhigh can cause the \gls{GBT} \gls{IF} system to have a larger
+\gls{IF} bandwidth than is necessary for a single source.  This can let parts
+of the \gls{IF} system be unnecessarily affected by \gls{RFI}. The observers
+might need to reconfigure after each source if the change in velocity is larger
+than the bandwidth of a filter.
+
+An example of how vlow and vhigh can be used is as follows.  Suppose that
+you are looking for water masers in extragalactic AGN.  Furthermore, lets
+say that you are looking at 100 candidates with velocities from
+$1000 ~{\rm km~s^{-1}}$ to $40000 ~{\rm km~s^{-1}}$.  Then you would
+set vlow=1000.0 and vhigh=40000.0 and will not change the \gls{IF}
+configuration when you change sources.
+ 
+Note that if {\bf vdef}=\dq{Red} (i.e., redshift), then you must give the redshift 
+parameter \dq{z} as the values for \dq{vlow} and \dq{vhigh} instead of velocity. 
+
+Your scientific contact person can help you decide if you should use
+{\bf vlow} and {\bf vhigh}.

@@ -1,0 +1,4 @@
+FORMAT    = NNTLE
+USERADVEL = 0
+FILE      = /home/astro-util/projects/GBTog_examples/gps-ops.txt
+Name      = 'GPS BIIR-2'

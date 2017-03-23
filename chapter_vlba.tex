@@ -1,0 +1,326 @@
+\chapter{VLBI Observing using the GBT}\label{chap:vlba}
+
+\section{Proposals}
+The \gls{GBT} has a \gls{VLBA}-compatible data acquisition system.  
+Proposals requesting \gls{GBT} participation in \gls{VLBA} or global \gls{VLBI} 
+observations should be submitted to the \gls{VLBA} only, not to the \gls{GBT}.
+
+Proposals requesting the \gls{GBT} participation in a \gls{VLB} experiment that
+includes no other \gls{NRAO} telescopes should be submitted to the
+\gls{VLBA} as well as to the \gls{GBT} and other agencies as appropriate, such
+as the \gls{EVN}.
+
+References for \gls{VLBA} proposals: \htmladdnormallink
+{https://science.nrao.edu/facilities/vlba/proposing}
+{https://science.nrao.edu/facilities/vlba/proposing}
+
+General information about the VLBA: \htmladdnormallink
+{https://science.nrao.edu/facilities/vlba/}
+{https://science.nrao.edu/facilities/vlba/}
+
+\section{VLBA-compatible recording}
+The data acquisition system is similar to those at the \gls{VLBA} stations:
+two \gls{RDBE} units and a Mark5C recorder are in use, allowing wide-band recording
+up to 2 Gbits/sec. Two modes are available, \dq{PFB} mode provides 16 32-MHz
+channels and a total  recording rate of 2 Gbits/sec.  The \dq{DDC} mode allows up
+to 4 channels of bandwidth 1 to 128~MHz. With two \glspl{RDBE} available, up to
+8 \gls{DDC} channels may be used.
+
+ The SCHED default frequency setups should be correct for writing schedules
+for the new system.
+
+The old data acquisition system with the DAR rack and Mark5A recorder has been 
+retired.  No proposals should request it.
+
+\newpage
+
+\section{Schedule Preparation}
+Scheduling is done through the \gls{VLBA} analysts in Socorro.  
+\begin{itemize}
+\item Schedules are prepared with the SCHED program.   \newline
+(refer to: \htmladdnormallink
+{http://www.aoc.nrao.edu/software/sched/index.html}
+{http://www.aoc.nrao.edu/software/sched/index.html})
+
+\item The \gls{GBT} uses the standard \gls{VLBA} schedule files
+({\tt*.key} and {\tt*.vex} files).  
+\item The user needs to prepare a {\tt.key} file for SCHED and send it
+to the \gls{VLBA} analysts.
+
+\item Use {\bf GBT\_VLBA} as the station name, except for cold weather
+in which case use {\bf GBT\_COLD}. Refer to pointing and weather sections, below.  
+\item In general, use {\bf GBT\_COLD} during the months of December, January,
+and February.
+\end{itemize}
+
+The schedules, either {\tt.vex} or {\tt.key} files, are processed by the \gls{VLBA}
+analysts to produce schedule scripts for each \gls{VLBA} telescope, including one
+for the \gls{GBT}.  These scripts are interpreted at the \gls{GBT} by a process
+called \dq{RunVLBI} which generates the configuration and pointing commands for
+the \gls{GBT}. The same script runs in the \gls{VLBA} backend to drive the
+recording and backend frequency setup.  The \gls{GBT} telescope operator runs these
+experiments. The user does not need to know anything about GBT-specific script
+details, i.e, the \gls{Astrid} configurations, catalogs, and scheduling blocks.
+
+There are, however,  several GBT-specific details which the user needs to take
+into consideration when designing the observing schedule.  These are described in
+the next few sections.
+
+\section{Special considerations when using the GBT}
+
+\begin{itemize}
+\item Allow about 30 minutes setup time at the beginning of a session before
+\gls{VLBI} recording begins, except for the 3mm and 7mm receivers for which one
+hour setup time should be allowed.
+ 
+\item Changing between Gregorian receivers requires rotating the turret.
+      The telescope operator initiates this rotation.  At least 5 minutes
+      should be allowed in the schedule to change from one Gregorian receiver to
+      another.
+        
+\item  Changing between Gregorian and prime focus requires about 10 minutes;
+       that is the time required to extend or retract the prime focus boom.  
+       Changing from one prime focus receiver to another requires about 4
+       hours, because one feed must be physically removed and replaced with
+       another.
+
+\item The prime focus receivers include 50 cm and 90 cm bands; 
+      whereas \gls{Lband} and all higher frequencies ($\nu > $ 1.2~GHz)
+      use the Gregorian focus.
+
+\item One needs to include enough pointing/focus updates -- see below.
+  
+\item There are some weather-related restrictions -- see below.
+  
+\end{itemize}
+
+\newpage
+
+\section{Available Receivers and Bands}
+The receivers and frequency bands are listed in table~\ref{table:vlbabands}. 
+Note that some bands are available on the \gls{GBT} but not on the \gls{VLBA}.
+Note also the time it takes to change receivers, as described above. For more
+information, consult
+\begin{itemize}
+\item The GBT proposers guide, chapter 4, for antenna and receiver performance.
+\item Gain curves, see \htmladdnormallink
+{https://safe.nrao.edu/wiki/bin/view/GB/Observing/GainPerformance}
+{https://safe.nrao.edu/wiki/bin/view/GB/Observing/GainPerformance}
+\end{itemize}
+
+\begin{table}[!h]
+\begin{center}
+\caption[VLBA bands and GBT receivers]{VLBA bands and GBT receivers.
+\label{table:vlbabands}}
+\begin{tabular}{c c c c c c c c }
+\toprule
+
+VLBA & VLBA      & GBT       & GBT      & Net  & Primary & Est. & Typical \\
+Band & Frequency & Frequency & Receiver & Side-& Beam    & SEFD & Tsys    \\
+     & Range     & Range     &          & band & FWHM    & (Jy) & (K)     \\
+     & (GHz)     & (GHz)     &          &      &         &      &         \\
+
+\midrule
+90 cm & 0.312-0.342 & 0.290-0.395 & Rcvr\_342 (PF1) & lower & 36\arcminute & 25 & 20-70 \\
+--- & --- & 0.385-0.520 & Rcvr\_450 (PF1)  & lower & 27\arcminute & 22 & 20-50 \\
+50 cm & 0.596-0.626 & 0.510-0.690 & Rcvr\_600 (PF1) & lower & 21\arcminute & 12 & 20-35 \\
+--- & --- & 0.680-0.920 & Rcvr\_800 (PF1) & lower & 15\arcminute & 15 & 18-25 \\
+--- & --- & 0.910-1.230 & Rcvr\_1070 (PF2) & lower & 12\arcminute & 10 & 18-22 \\
+\midrule
+18/21 cm & 1.35-1.75 & 1.1-1.8 & Rcvr1\_2 & lower & 9\arcminute & 10 & 15-18 \\
+13 cm & 2.15-2.35 & 1.68-2.60 & Rcvr2\_3 & lower & 5.8\arcminute & 12 & 18 \\
+6 cm & 3.9-7.9 & 3.95-8.0 & Rcvr4\_6 & lower & 2.5\arcminute & 10 & 23 \\
+4 cm & 8.0-8.8 & 7.9-10.1 & Rcvr8\_10 & lower & 1.4\arcminute & 15 & 27 \\
+2 cm & 12.0-15.4 & 11.8-18.0 & Rcvr12\_18 & upper & 54\arcsecond & 20 & 27 \\
+\midrule
+1 cm & 21.7-24.1 & 18.0-27.5 & RcvrArray18\_26 & lower & 32\arcsecond & 25 & 40 \\
+--- & --- & 26.0-40.0 & Rcvr26\_40 & upper & 22\arcsecond & 20-40 & 40 \\
+7 mm & 41.0-45.0 & 40.0-50.0 & Rcvr40\_52 & upper & 16\arcsecond & 60 & 80 \\
+3 mm & 80.0-90.0 & 68-92 & Rcvr68\_92 & upper & 10\arcsecond & 100 & 110 \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{table}
+
+\noindent\textbf{Notes:}
+\begin{itemize}
+\item Receivers with \dq{PF1} or \dq{PF2} are at the prime focus; the others
+are at the Gregorian focus.
+\item Rcvr26\_40 has linear polarization only; 2 beams but one polarization
+state per beam; all other receivers can receive dual circular polarizations.
+\item Pulse Cal (or phase cal) is injected in receivers of 2 cm wavelength and
+longer; pulse cal is injected in the 7mm receiver after the first mix; other
+receivers have no pulse cal injection.
+\item The 3mm receiver (Rcvr68\_92) has no noise cal or pulse cal injection.
+See the section below for how calibration is done.
+\end{itemize}
+
+
+\newpage
+
+\section{Include Pointing and Focus Checks}
+
+It is recommended to allow for pointing and focus touch-ups when observing at
+the higher frequencies. Recommendations are listed in
+table~\ref{table:vlbapointing}.
+
+\begin{table}[!h]
+\begin{center}
+\begin{tabular}{cc}
+\toprule
+Frequency Band &  Interval between pointing scans \\
+\midrule
+4--10~GHz & 4--5 hours \\
+12--18~GHz & 3--4 hours \\
+18--26~GHz & 1.5--2 hours \\
+40--90~GHz & 30--60 minutes \\
+\bottomrule
+\end{tabular}
+\caption[GBT pointing and focus checks with VLBA observations]
+{GBT pointing and focus checks with VLBA observations.
+\label{table:vlbapointing}}
+\end{center}
+\end{table}
+
+\noindent\textbf{Notes:}
+\begin{itemize}
+\item The observer should select a strong continuum source (flux density
+$>$ 0.5 Jy, or $>$ 1.0 Jy for $\nu >$ 20~GHz).
+\item Allow about 6 minutes for the pointing/focus check, except for the 3mm
+receiver for which you should allow 8 minutes in order to include the
+temperature calibration.
+\item For observing at frequencies below 5~GHz, include one pointing scan at
+the beginning of the session.
+\item The telescope operator will usually do a point/focus scan at the beginning
+of an observing session, during the startup time.
+\end{itemize}
+
+To include a point/focus scan in your schedule, put commands into your {\tt.key}
+file similar to the following:
+
+\lstinputlisting[captionpos=b,keepspaces=true,basicstyle=\ttfamily,
+frame=single,framerule=1pt,backgroundcolor=\color{white},
+caption={[pointing and focusing with the GBT]Example additions to the {\tt.key}
+file for GBT point and focus observations},
+label={lst:vlba_pointing}]
+{vlba_pointing.key}
+
+It is important to specify only the \gls{GBT} ({\tt stations=gbt\_vlba} or
+{\tt stations=gbt\_cold}) when putting in {\tt peak=1}.  Otherwise it may do
+a reference pointing for the whole \gls{VLBA}, and if the pointing source is
+under about 5 Jy, it can produce bad results. Refer to the SCHED manual for
+details of schedule preparation at \htmladdnormallink
+{http://www.aoc.nrao.edu/software/sched/index.html}
+{http://www.aoc.nrao.edu/software/sched/index.html}
+
+\subsection{3mm Receiver (68-92 GHz) calibration}
+System Temperature ($T_{sys}$) calibration with this receiver uses a calibration
+wheel that can place hot and cold loads in front of the feed. There is no noise
+injection as happens with the other receivers. A \dq{cal sequence} procedure is
+done before and after each peak/focus to provide a $T_{sys}$ measurement. A cal
+sequence is inserted automatically with the peak/focus; the user does not have
+to specify it explicitly. A cal sequence takes about one minute, and will happen
+before and after a peak/focus. The user should use a dwell time of 8 minutes
+for the pointing scan, and that will include the cal sequences. Pointing Sources
+for high frequency observing should be strong, i.e., stronger than 3 Jy if possible.
+
+\newpage
+
+\section{Weather Considerations}
+At the higher frequencies, windy conditions can degrade the pointing.
+Refer to recommended wind limits for observing at \htmladdnormallink
+{https://safe.nrao.edu/wiki/bin/view/GB/PTCS/PointingFocusGeneralStrategy}
+{https://safe.nrao.edu/wiki/bin/view/GB/PTCS/PointingFocusGeneralStrategy}
+
+\begin{itemize}
+\item For sustained winds of $>$ 35 MPH or gusts $>$ 40 MPH, the telescope
+is stowed for safety.
+\item Ambient temperature $<$ 17F (-8.3\celsius) : the maximum azimuth slew rate
+is reduced to $18^{\circ}$/min.
+\item Ambient temperature $<$ -10F (-23\celsius) : the antenna is shut down.
+\end{itemize}
+
+If your project will run in December, January, or February you should use the
+lower azimuth slew rate of $18^{\circ}$/min when making the schedule. This is
+accomplished by using {\tt stations=gbt\_cold} in your {\tt.key} file, instead
+of {\tt stations=gbt\_vlba}.
+
+\section{Telescope Move times and limits}
+\begin{description}
+\item[Move Limits:]\ 
+\begin{itemize}
+\item Elevation: $5^{\circ} \rightarrow 90^{\circ} $
+\item Azimuth: $-90^{\circ} \rightarrow +450^{\circ}$,
+i.e, $180^{\circ} \pm 270^{\circ} $
+\end{itemize}
+\item[Calculating time to change sources:]\ 
+\begin{itemize}
+\item {\bf Maximum Azimuth slew rate}: $36^{\circ}$/min ($17^{\circ}$/min at low
+temperature)
+\item {\bf Maximum Elevation slew rate}: $18^{\circ}$/min
+\item {\bf Acceleration}: $0.05^{\circ}$sec$^{-2}$
+\item {\bf Overhead}: 20 seconds to settle
+\item Allow a minimum of 30 seconds for a source change, even for short moves.
+\end{itemize}
+\end{description}
+
+\section[High Frequency (40-90 GHz) active surface considerations]
+{High Frequency (40-90 GHz) active\\ surface considerations}
+
+When using the 40-50 or 68-92 GHz receivers, one should tune up the active
+surface by doing an \dq{AutoOOF} procedure. This is so-called \dq{Out of focus
+holography} in which a strong point source is observed both in and out of
+focus, and large-scale deviations of the surface can be derived. The surface
+corrections are applied to the active surface model. This improves the
+aperture efficiency by a factor of 2 at 86 GHz. One should do an AutoOOF,
+which takes about 30 minutes, at the beginning of any high-frequency
+observing. The user does not have to specify this in the observing file;
+the operator or telescope friend will do an AutoOOF calibration prior to
+starting the observing, during the setup.
+
+When observing with the 68-92 GHz receiver, one should repeat the AutoOOF
+about every 3-4 hours. This means that the user should allow a 30 minute gap
+in the schedule about every 3-4 hours. The user does not have to specify
+anything about an autoOOF in the schedule; just allow the 30 minute gap.
+The operator or telescope friend will do the calibration. 
+
+\section{GBT Coordinates}
+
+The geodetic position for the GBT (as of Jan 2000), based on a local survey
+referred to a standard NGS survey marker on the Green Bank site in the NAD83
+system is
+\begin{itemize}
+\item longitude = $79^{\circ} 50\arcminute 23.406\arcsecond W$
+\item latitude = $38^{\circ} 25\arcminute 59.236\arcsecond N$
+\item Height of Track: NAVD88 height: 807.43 m (wrt ellipsoid: 776.34 m)
+\item Height of elevation axle: NAVD88 height: 855.65 m (wrt ellipsoid: 824.55 m) 
+\end{itemize}
+
+The surveyed height refers to the top of the azimuth track. The phase center
+(intersection of azimuth and elevation axes) is 48.22m above the top of the
+azimuth track. The average geoid height = -31.10m with respect to the
+ellipsoid. The estimate uncertainty is 0.04\arcsecond.
+
+The Earth-centered \gls{ITRF} coordinates for the phase center of the \gls{GBT}
+were derived from a \dq{TIES} run with the \gls{GBT} and 20-meter telescopes in
+December 2002.  Geodetic solution for the \gls{ITRF} coordinates may be found
+through the web site:\\
+\htmladdnormallink
+{http://gemini.gsfc.nasa.gov/solutions/}
+{http://gemini.gsfc.nasa.gov/solutions/}
+
+\noindent The solution as of Oct 2007 is:
+\begin{align*}
+x =& 882589.638\ meters \\
+y =& -4924872.319\ meters \\
+z =& 3943729.355\ meters
+\end{align*}
+
+\noindent Based on the \gls{ITRF} solution, the best NAD83 geodetic position is:
+
+\begin{align*}
+\text{Latitude} &= 38^{\circ} 25\arcminute 59.266\arcsecond N\ (38.433129^{\circ} N)  \\
+\text{Longitude}&= 79^{\circ} 50\arcminute 23.423\arcsecond W\ (79.839840^{\circ} W)  \\ 
+\text{Height above the ellipsoid}&= 824.36\ m \\
+\text{Height above the geoid}&= 855.46\ m 
+\end{align*}

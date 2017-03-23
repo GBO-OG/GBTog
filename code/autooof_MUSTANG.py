@@ -1,0 +1,3 @@
+#Configure for MUSTANG...
+Configure('/users/bmason/mustangPub/sb/mustangfull.conf')
+AutoOOF(source='1159+2914')

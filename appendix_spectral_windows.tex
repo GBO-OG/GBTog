@@ -1,0 +1,119 @@
+\chapter{Introduction to Spectral Windows}\label{appendix:spectralwindows}
+
+Several simultaneous frequency bands may be specified with a list of rest
+frequencies and offsets (keywords {\bf restreq}, {\bf deltafreq}, see
+\S~\ref{sec:keywords}). If using a backend other than \gls{VEGAS}, the
+{\bf nwin} (number of spectral windows) keyword will also need to be specified.
+Each spectral window includes both polarizations. i.e., if you specify one window,
+you get two \glspl{IFsys} routed to the back end device, one for each
+polarization; if you specify two windows, you get 4 glspl{IF}, and so forth.
+
+The configuration software tries to put the midpoint of the total frequency range 
+spanned by all windows at the center of the nominal IF1 band so as to use the 
+narrowest \gls{IF} bandpass filters that will pass the desired range of frequencies.
+In some uncommon cases this is not possible, so the \gls{IF} bandwidth must be
+increased to pass the desired range of frequencies. For prime focus receivers, the
+total \gls{IF} bandwidth is 240 MHz; for the Gregorian receivers, up to 4 GHz is
+possible, depending on the receiver.
+
+The user specifies the rest frequencies ({\bf restfreq} keyword) and may also
+specify a range of radial velocities ({\bf vlow} and {\bf vhigh} keywords,
+see Appendix~\ref{appendix:vlowhigh}). The various \gls{IF} filters are set to 
+include the required range of frequencies in the local frame required by the 
+radial velocity range. The configuration software predicts the local frequency for 
+each spectral window based on the rest frequencies and the radial velocity. 
+During observing the tracking \gls{LO} will correctly track the doppler tracking
+frequecy set by the {\bf dopplertrackfreq} keyword.  If {\bf dopplertrackfreq} is
+not provided, the default value will be the first spectral window specified by the
+{\bf restfreq} keyword will be used (if not using the advanced restfreq syntax).
+Because there is only one tracking \gls{LO}, the other spectral windows are set
+up with frequency offsets in the local frame with respect to the doppler tracking
+frequency. When observing at a variety of high velocities, one should run a
+configuration for each change of velocity (i.e., do not rely on just changing the
+velocity in the \gls{LOone} manager), and one should set {\bf vlow}={\bf vhigh}.  
+
+Note that the {\bf deltafreq} keyword gives frequency offsets that are applied in 
+the local (or topocentric) frame i.e., it is applied as an offset in the \gls{IFsys}.
+For example, if $V_{frame}$ is velocity of the reference frame, $V$ is source velocity
+in that frame, $\nu_{rest}$ is the rest frequency of the line and we use the Radio
+definition of velocity then the topocentric frequency will be
+
+\begin{equation}
+\nu_{topo} = \nu_{rest} \left( 1 - {\left(V+V_{frame}\right) \over c} \right) 
++ deltafreq
+\end{equation}
+
+Finally note that the expert user may specify any of the \gls{IFsys} conversion 
+frequencies and total \gls{IFsys} bandwidth, overriding the calculations done by the 
+configuration software ({\bf ifbw}, {\bf if0freq}, {\bf lo1bfreq}, {\bf lo2freq}, and
+{\bf if3freq} keywords). This option may be needed in some peculiar cases. Of course
+one needs a good knowledge of the \gls{IFsys} to make use of this option. 
+
+\section{Array Receiver Spectral Windows}
+
+Array Receivers can be configured with a variety of spectral windows. The
+{\tt configtool}, part of \gls{Astrid}, sets up these spectral windows, and a new
+syntax was required to specify more complex configurations.  Each feed has the
+potential to be tuned to a different rest frequency. For the \gls{KFPA} receiver,
+a special \dq{all} beam mode is defined which uses all 7 beams, plus one beam tuned
+to a second, different spectral window. This stretches the syntax of the
+{\tt configtool} {\bf restfreq} and {\bf deltafreq} keywords. In order to support
+these modes within the {\tt configtool}, expanded values and intepretations of
+{\bf nwin}, {\bf deltafreq} and {\bf restfreq} were implemented.
+
+The syntax uses a python dictionary for the {\bf restfreq} and {\bf deltafreq}
+keyword values for \gls{KFPA} configurations. The {\bf restfreq} dictionary maps
+beams and frequencies of the spectral windows. The delta frequency is a map of
+{\bf deltafreq} to {\bf restfreq}. The list of values syntax continues to be
+supported for simpler modes. When the dictionary is used to specify the rest
+frequencies, this dictionary must contain a key named \sq{DopplerTrackFreq}. 
+The value assigned to this key is the rest frequency that will be used by
+the \gls{LO} as the Doppler tracking frequency.
+
+\noindent The following examples show of how to specify {\tt configtool}
+frequency settings:
+\begin{itemize}[leftmargin=*]
+\item {\bf Example 1}: Requests that beams 1,2,3 and 4 have a rest frequency of 24000~MHz,
+that beams 5,6,7 have a rest frequency of 23400~MHz and the 2nd beam 1 \gls{IF} band has
+a rest frequency of 25000~MHz. There are no delta frequencies used in this observation. 
+For non zero delta frequencies, the {\bf deltafreq} values should be specified in the
+same manor as the {\bf restfreq}.
+
+\lstinputlisting[language=PythonAstrid,captionpos=b,frame=single,framerule=1pt,
+caption={[Multi-beam restfreq syntax example 1]},label={lst:appendix_example1}]
+{appendix_example1.py}
+
+\item {\bf Example 2}: For simple configurations the syntax for the existing
+receivers would also be supported.  This results in the routing of 4 beams,
+2 polarizations with each tuned to a rest frequency of 24000~MHz.
+
+\lstinputlisting[language=PythonAstrid,captionpos=b,frame=single,framerule=1pt,
+caption={[Multi-beam restfreq syntax example 2]},label={lst:appendix_example2}]
+{appendix_example2.py}
+
+\item {\bf Example 3}: Comparison of two configtool inputs where {\bf restfreq} is a list,
+and input with the dictionary syntax.  The two configurations are equal.
+
+\begin{minipage}{0.375\linewidth}
+\lstinputlisting[language=PythonAstrid,captionpos=b,frame=single,framerule=1pt,
+caption={[Multi-beam restfreq syntax example 3]},label={lst:appendix_example3a}]
+{appendix_example3a.py}
+\end{minipage}
+\hfill
+\begin{minipage}{0.57\linewidth}
+\lstinputlisting[language=PythonAstrid,captionpos=b,frame=single,framerule=1pt,
+caption={[Multi-beam restfreq syntax example 4]},label={lst:appendix_example3b}]
+{appendix_example3b.py}
+\end{minipage}
+
+\item {\bf Example 4}: 8 different rest frequencies specified.
+\lstinputlisting[language=PythonAstrid,captionpos=b,frame=single,framerule=1pt,
+caption={[Multi-beam restfreq syntax example 5]},label={lst:appendix_example4}]
+{appendix_example4.py}
+
+\item {\bf Example 5}: A configuration that specifies delta frequencies.
+\lstinputlisting[language=PythonAstrid,captionpos=b,frame=single,framerule=1pt,
+caption={[Multi-beam restfreq syntax example 6]},label={lst:appendix_example5}]
+{appendix_example5.py}
+
+\end{itemize}
