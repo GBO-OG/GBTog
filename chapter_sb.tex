@@ -2265,7 +2265,7 @@ label={lst:peak}]
 \subsubsection{Tip}
 
 The Tip scan moves the beam on the sky from one elevation to another elevation
-while taking data and maintaining a constant azimuth. 
+while taking data and maintaining a constant azimuth. It is recommended to tip from $6^\circ$ to $45^\circ$ as the atmosphere will not change significantly above $45^\circ$.
 
 \begin{description}
 \item[{\bf SYNTAX}:] {\bfseries{\textcolor{pythonKeywords}{Tip}}(}
@@ -2275,7 +2275,7 @@ start location of the tip scan.  The Location must be in AzEl or encoder
 coordinates.
 \item[endOffset] An Offset object. It specifies the beam's final position for 
 the scan, relative to the location specified in the first parameter. The Offset
-also must be in AzEl or encoder coordinates.
+also must be in AzEl or encoder coordinates.  {\bf WARNING:} Ensure that you do not slew below $6^\circ$ elevation.
 \item[scanDuration] A float. It specifies the length of each scan in seconds.
 \item[beamName] A string. It specifies the receiver beam to use for the scan. 
 beamName can be \sq{C} (center), \sq{1}, \sq{2}, \sq{3}, \sq{4} or any valid
@@ -2291,7 +2291,7 @@ allows the observer to specify a stop time for the Tip.
 \item[{\bf USAGE}:] Scan timing may be specified by either a scanDuration,
 a stopTime, a startTime plus stopTime, or a startTime plus scanDuration.
 The following example tips the \gls{GBT} from $6^\circ$ in elevation to
-$80^\circ$  in elevation over a period of five minutes using beam 1:
+$45^\circ$  in elevation over a period of five minutes using beam 1:
 \end{description}
 
 \lstinputlisting[language=PythonAstrid,
